@@ -2,99 +2,129 @@ from fastmcp import FastMCP
 from typing import Optional
 
 # Initialize FastMCP server
-mcp = FastMCP("Gmail & Instagram MCP Server")
+mcp = FastMCP("Twitter MCP Server")
 
 @mcp.tool()
-def get_gmail_emails(
-    max_results: int = 10,
-    query: Optional[str] = None,
-    label: Optional[str] = "INBOX"
-) -> dict:
+def send_tweet(text: str) -> dict:
     """
-    Retrieve emails from Gmail.
+    Send a tweet.
     
     Args:
-        max_results: Maximum number of emails to retrieve (default: 10)
-        query: Search query to filter emails (optional)
-        label: Gmail label to filter by (default: INBOX)
+        text: The content of the tweet to send
     
     Returns:
-        Dictionary containing email data
+        Dictionary containing tweet confirmation
     """
     # Dummy implementation - returns mock data
-    emails = []
-    
-    for i in range(min(max_results, 5)):
-        emails.append({
-            "id": f"email_{i+1}",
-            "from": f"sender{i+1}@example.com",
-            "subject": f"Sample Email {i+1}" + (f" matching '{query}'" if query else ""),
-            "snippet": f"This is a preview of email {i+1}...",
-            "date": f"2025-11-{21-i:02d}",
-            "label": label,
-            "unread": i % 2 == 0
-        })
-    
     return {
         "success": True,
-        "total_results": len(emails),
-        "query": query,
-        "label": label,
-        "emails": emails
+        "tweet": {
+            "id": "tweet_12345",
+            "text": text,
+            "created_at": "2025-11-21T10:30:00Z",
+            "likes": 0,
+            "retweets": 0,
+            "replies": 0,
+            "views": 12
+        },
+        "message": "Tweet sent successfully!"
     }
 
 
 @mcp.tool()
-def get_instagram_profile(username: str) -> dict:
+def get_comments(tweet_id: str, max_results: int = 10) -> dict:
     """
-    Retrieve Instagram profile information.
+    Get comments/replies on a tweet.
     
     Args:
-        username: Instagram username to fetch profile for
+        tweet_id: The ID of the tweet to get comments for
+        max_results: Maximum number of comments to retrieve (default: 10)
+    
+    Returns:
+        Dictionary containing comments data
+    """
+    # Dummy implementation - returns mock data
+    comments = []
+    
+    for i in range(min(max_results, 5)):
+        comments.append({
+            "id": f"comment_{i+1}",
+            "user": f"@user{i+1}",
+            "text": f"This is a sample comment {i+1} on tweet {tweet_id}",
+            "likes": 50 - (i * 10),
+            "created_at": f"2025-11-{21-i:02d}T{10+i}:00:00Z",
+            "verified": i == 0
+        })
+    
+    return {
+        "success": True,
+        "tweet_id": tweet_id,
+        "total_comments": len(comments),
+        "comments": comments
+    }
+
+
+@mcp.tool()
+def get_profile_data() -> dict:
+    """
+    Get Twitter profile data for the authenticated user.
     
     Returns:
         Dictionary containing profile data
     """
     # Dummy implementation - returns mock data
-    profile_data = {
+    return {
         "success": True,
-        "username": username,
         "profile": {
-            "full_name": f"{username.title()} User",
-            "bio": f"This is the bio for @{username}",
-            "profile_picture": f"https://example.com/profiles/{username}.jpg",
-            "followers": 15420,
-            "following": 892,
-            "posts": 234,
-            "verified": username.lower() in ["verified_user", "celebrity"],
-            "is_private": False,
-            "recent_posts": [
-                {
-                    "id": f"post_1",
-                    "caption": "Beautiful sunset! 🌅",
-                    "likes": 1205,
-                    "comments": 43,
-                    "date": "2025-11-20"
-                },
-                {
-                    "id": f"post_2",
-                    "caption": "Coffee time ☕",
-                    "likes": 892,
-                    "comments": 28,
-                    "date": "2025-11-18"
-                },
-                {
-                    "id": f"post_3",
-                    "caption": "Weekend vibes! 🎉",
-                    "likes": 1543,
-                    "comments": 67,
-                    "date": "2025-11-15"
-                }
-            ]
+            "username": "demo_user",
+            "display_name": "Demo User",
+            "bio": "Software developer | Tech enthusiast | Coffee lover ☕",
+            "profile_image": "https://example.com/profiles/demo_user.jpg",
+            "banner_image": "https://example.com/banners/demo_user.jpg",
+            "followers": 2450,
+            "following": 389,
+            "tweets": 1823,
+            "verified": False,
+            "created_at": "2020-03-15",
+            "location": "San Francisco, CA",
+            "website": "https://example.com"
         }
     }
+
+
+@mcp.tool()
+def get_posts(max_results: int = 10) -> dict:
+    """
+    Get recent tweets/posts from the user's timeline.
     
-    return profile_data
+    Args:
+        max_results: Maximum number of posts to retrieve (default: 10)
+    
+    Returns:
+        Dictionary containing posts data
+    """
+    # Dummy implementation - returns mock data
+    posts = []
+    
+    for i in range(min(max_results, 5)):
+        posts.append({
+            "id": f"post_{i+1}",
+            "user": "@demo_user",
+            "text": f"This is sample tweet number {i+1}. Having a great day! 🚀",
+            "created_at": f"2025-11-{21-i:02d}T{14+i}:30:00Z",
+            "likes": 250 - (i * 40),
+            "retweets": 45 - (i * 8),
+            "replies": 12 - (i * 2),
+            "views": 5000 - (i * 800),
+            "has_media": i % 2 == 0,
+            "media_type": "photo" if i % 2 == 0 else None
+        })
+    
+    return {
+        "success": True,
+        "total_posts": len(posts),
+        "posts": posts
+    }
 
 
 # Run the server with HTTP streaming support

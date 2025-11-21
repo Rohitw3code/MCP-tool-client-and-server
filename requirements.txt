@@ -1,0 +1,8 @@
+fastmcp
+langchain-openai
+langchain-core
+langgraph
+python-dotenv
+openai
+mcp
+httpx

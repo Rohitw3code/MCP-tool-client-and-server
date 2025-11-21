@@ -10,7 +10,7 @@ from openai import OpenAI
 load_dotenv()
 
 # Configuration
-SERVER_URL = "http://localhost:8002/sse"
+SERVER_URL = "http://0.0.0.0:8002/sse"
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 # Initialize OpenAI client
